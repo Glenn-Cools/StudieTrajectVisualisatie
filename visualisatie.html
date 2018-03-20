@@ -1,0 +1,213 @@
+<!DOCTYPE xhtml>
+<html xmlns="https://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
+    <title>Sankey Diagram</title>
+    <style>
+        @font-face {
+            font-family: "MyFont";
+            src: url('Lato-Regular.ttf') format("truetype");
+        }
+        html,
+        body {
+            height: 100%;
+            font-family: "MyFont", "Open Sans", Segoe UI light, Verdana, Tahoma, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #fff;
+        }
+        #chart {
+            height: 99%;
+            float: left;
+            position: absolute;
+            width: -moz-calc(80% - 45px);
+            width: -webkit-calc(80% - 45px);
+            width: calc(80% - 45px);
+        }
+        .pagetitle {
+            height: 30px;
+            color: #F60;
+            font-size: 20px;
+            line-height: 30px;
+            text-align: center;
+            font-weight: bold;
+            font-style: oblique
+        }
+        .node rect {
+            cursor: move;
+            fill-opacity: .9;
+            shape-rendering: crispEdges
+        }
+        .node text {
+            pointer-events: none;
+            text-shadow: 0 1px 0 #fff
+        }
+        .link {
+            stroke: #000;
+            stroke-opacity: .3;
+        }
+        .link:hover {
+            stroke-opacity: .7;
+        }
+
+        .my-legend {
+            margin-top: 20px;
+            margin-right: 20px;
+            z-index: 6;
+            float: right;
+            position: relative;
+            border: 1px solid #999;
+            background: #fff;
+        }
+
+        .my-legend .legend-title {
+            text-align: left;
+            margin-left: 5;
+            margin-top: 5;
+            margin-bottom: 5;
+            font-weight: bold;
+            font-size: 90%;
+        }
+
+        .my-legend .legend-scale ul {
+            margin: 0;
+            margin-bottom: 5;
+            padding: 0;
+            float: left;
+            list-style: none;
+        }
+
+        .my-legend .legend-scale ul li {
+            font-size: 80%;
+            list-style: none;
+            margin-left: 5;
+            margin-right: 10;
+            line-height: 18px;
+            margin-bottom: 2px;
+        }
+
+        .my-legend ul.legend-labels li span {
+            display: block;
+            float: left;
+            height: 16px;
+            width: 30px;
+            margin-right: 10;
+            margin-left: 0;
+            border: 1px solid #999;
+        }
+
+        .warning {
+            text-align: center;
+            font-size: 20px;
+        }
+
+
+    </style>
+    <link rel="stylesheet" href="css/auto-complete.css">
+    <script src="js/d3.v3.min.js"></script>
+    <script src="js/auto-complete.min.js"></script> 
+    
+
+    
+<!--
+    <script>
+        var sizecorrection = Math.max(0, 220 - parseInt(window.innerWidth * 0.2));
+        function checksize() {
+            if ((window.innerWidth < 600) || (window.innerHeight < 300)) {
+                alert("The recommended minimum resolution is 600 x 300.\n Yours is " + window.innerWidth + " x " + window.innerHeight + ".");
+            }
+            setTimeout(function(){
+                d3.select("#social").transition().style("opacity", 1);
+            },3000);
+        }
+        window.onresize = function() {
+            window.location.reload();
+        }
+    </script>
+-->
+</head>
+<body> <!-- onload="checksize();" -->
+
+    <!--Searchbar-->
+
+    <div id="searchbar">
+        <form onsubmit="return false;" class="pure-form" style="border-top: 1px solid #eee;border-bottom:1px solid #eee;background:#fafafa;margin:30px 0;padding:20px 10px;text-align:center">
+            Van:<br>
+            <input id="searchbar-input1" autofocus type="text" name="q" placeholder="Typ in een opleiding ..." style="width:100%;max-width:500px;outline:0"><br>
+            Naar:<br>
+            <input id="searchbar-input2" autofocus type="text" name="q" placeholder="Typ in een opleiding ..." style="width:100%;max-width:500px;outline:0">
+        </form>
+    </div>
+    <script>
+            var autoComplete_searchbar1 = new autoComplete({
+                selector: '#searchbar-input1',
+                minChars: 2,
+                source: function(term, suggest) {
+                    term = term.toLowerCase();
+                    var termparts = term.split(" ");
+                    var choices = diplomaList
+                    var suggestions = [];
+
+                    for (var i =0; i<choices.length;i++)
+                        if (termparts.every(function(part){return choices[i].name.toLowerCase().indexOf(part)>-1}))
+                            suggestions.push(choices[i].name)
+
+                    suggest(suggestions);
+                },
+                onSelect: function(event,term,item){
+                    draw()
+                }
+            });
+
+            var autoComplete_searchbar2 = new autoComplete({
+                selector: '#searchbar-input2',
+                minChars: 2,
+                source: function(term, suggest) {
+                    term = term.toLowerCase();
+                    var termparts = term.split(" ");
+                    var choices = diplomaList
+                    var suggestions = [];
+
+                    for (var i =0; i<choices.length;i++)
+                        if (termparts.every(function(part){return choices[i].name.toLowerCase().indexOf(part)>-1}))
+                            suggestions.push(choices[i].name)
+
+                    suggest(suggestions);
+                },
+                onSelect: function(event,term,item){
+                    draw()
+                }
+            });
+
+
+        </script>
+    
+    <!--PAGE WRAPPER-->
+
+    <div id="content" style="opacity:1;">
+        
+       
+        <!--SANKEY DIAGRAM-->
+
+        <div class="my-legend" style="display:none">
+
+            <div class='legend-title'>Legende:</div>
+
+        </div>
+
+        <div id="chart" style="z-index:5;"></div>
+
+            <!---SCRIPTS-->
+            <script src="js/data.js"></script>
+            <script src="js/dataProcessing.js"></script>
+            <script src="js/sankey.js"></script>
+            <script src="js/main.js"></script>
+
+            
+    
+        </div>
+    
+    
+    
+    </body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE xhtml>
+<html xmlns="https://www.w3.org/1999/xhtml">
+	<head>
+	    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
+	    <title>Sankey Diagram</title>
+	    <style type="text/css">
+	    	ul {
+	    		list-style-type: none;
+	    	}
+
+	    </style>
+	</head>
+	<body>
+		<div>
+			<h1> Instructies:</h1>
+			<p>Beste testgebruiker
+			<br><br>
+			U begint met het testen van de eerste applicatie. De link naar de applicatie en de bijhorende test kunt u vinden onder "Test 1".
+			<br><br>
+			Als u klaar bent met het testen van de eerste applicatie, gaat u door met het testen van de tweede. Ook hier zijn de link naar de applicatie en de testen te vinden onder "Test 2".
+			<br><br>
+			Gelieve de volgorde van de testen te respecteren.
+			<br><br>
+			In het totaal word de duur van de testen geschat op een 45 à 60 min.
+			</p>
+		</div>
+		<div id="test1"> <h2> Test 1: </h2>
+			
+		</div>
+		<div id="test2"> <h2> Test 2: </h2>
+			
+		</div>
+		<div id="rng"></div> <!-- test div to check the rng -->
+
+
+
+	<script src="js/d3.v3.min.js"></script>
+	<script>
+
+		var rngNumber = Math.floor(Math.random() * 2 ) // generates a 0 or a 1 with 50% likelihood of either
+		//d3.select("#rng").append("text").text(rngNumber)
+
+		var onlineTool;
+		var myTool;
+		if(rngNumber < 1){
+			onlineTool = d3.select("#test1")
+			myTool = d3.select("#test2")
+		}else{
+			onlineTool = d3.select("#test2")
+			myTool = d3.select("#test1")
+		}
+
+		var OTUl  = onlineTool.append("ul")
+		var OTli1 = OTUl.append("li")
+		OTli1.append("text").text("Applicatie link: ")
+		OTli1.append("a").attr("href","http://www.verderstuderen.be/#/").attr("target","_blank").text("verderstuderen.be")
+		var OTli2 = OTUl.append("li")
+		OTli2.append("text").text("Test link: ")
+		OTli2.append("a").attr("href","https://goo.gl/forms/Ji6XSRaulJM5W0Pw2").attr("target","_blank").text("formulier")
+		// voeg hier nog de google forms link toe
+
+		var MTUl  = myTool.append("ul")
+		var MTli1 = MTUl.append("li")
+		MTli1.append("text").text("Applicatie link: ")
+		MTli1.append("a").attr("href","visualisatie.html").attr("target","_blank").text("visualisatie")
+		var MTli2 = MTUl.append("li")
+		MTli2.append("text").text("Test link: ")
+		MTli2.append("a").attr("href","https://goo.gl/forms/kp5fQAOLxp5EzXxe2").attr("target","_blank").text("formulier")
+		// voeg hier nog de google forms link toe
+
+
+
+	</script>
+	</body>
+
+	
+</html>
