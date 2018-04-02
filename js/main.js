@@ -87,7 +87,7 @@ var fixedlayout=[];
 var formatNumber = d3.format(",.0f");
 
 var colorAxis = d3.scale.category10()	// TODO : ordinal scale with colors self picked... 
-		.domain(["bachelor","master","bachelor-na-bachelor","master-na-master","postgraduaat","leraar","doctoraat","schakelprogramma","voorbereidingsprogramma","other"]);
+		.domain(["bachelor","master","bachelor-na-bachelor","master-na-master","postgraduaat","leraar","doctoraat","schakelprogramma","voorbereidingsprogramma","andere"]);
 
 var color = function(name){
 	if(name.indexOf("(mnm)")>-1){
@@ -109,7 +109,7 @@ var color = function(name){
     }else if(name.indexOf("Master")>-1){
         return colorAxis("master");
     }else{
-    	return colorAxis("other");
+    	return colorAxis("andere");
     }
 }
 

@@ -7,21 +7,39 @@
 	    	ul {
 	    		list-style-type: none;
 	    	}
+	    	p,h1,h2 {
+	    		font-family: Arial, Helvetica, sans-serif
+	    	}
+
 
 	    </style>
 	</head>
 	<body>
 		<div>
-			<h1> Instructies:</h1>
-			<p>Beste testgebruiker
-			<br><br>
-			U begint met het testen van de eerste applicatie. De link naar de applicatie en de bijhorende test kunt u vinden onder "Test 1".
-			<br><br>
-			Als u klaar bent met het testen van de eerste applicatie, gaat u door met het testen van de tweede. Ook hier zijn de link naar de applicatie en de testen te vinden onder "Test 2".
-			<br><br>
-			Gelieve de volgorde van de testen te respecteren.
-			<br><br>
-			In het totaal word de duur van de testen geschat op een 45 à 60 min.
+			<h1> Welkom beste testgebruiker. </h1>
+			</p>
+			<h2>Situering:</h2>
+			<p>
+				Het onderzoek is in verband met een thesis omtrent een recommendersystem voor het onderwijsaanbod van de KU Leuven te ontwikkelen.<br>
+				In dit onderzoek wordt er gebruik gemaakt van een visualisatie om de verschillende trajecten die studenten in het verleden gedaan hebben voor te stellen. <br>
+				In deze testen zul je twee verschillende visualisaties testen en beoordelen.
+				Het onderzoek zal ongeveer een 60-tal minuten duren. <br>
+				Het onderzoek gebeurd anoniem. Je krijgt hieronder een testID dat je aan het begin van elke test moet invullen. <br> 
+				Op deze manier kan ik de test resultaten van beide testen per ID aan elkaar linken op anonieme wijze. <br>
+				Wenst je niet mee te doen, kun je nu de site verlaten. <br>
+				Indien je wel wilt meedoen wordt er verwacht dat je beide testen uitvoerd. <br>
+				De instructies omtrent het testen kun je vinden hieronder en in de enquêtes van elke test. Gelieve deze dan ook even kort te lezen. <br>
+				Als je algemene vragen, feedback of opmerkingen hebt, kun je mij altijd contacteren via mail: glenn.cools1@student.kuleuven.be.
+			</p>
+			<h2>TestID: </h2>
+			<div id= "testid"></div>
+			<h2> Instructies:</h2>
+			<p>
+			Eenmaal je begint met het testen noteer je best je uniek testID, deze wordt telkens bij het bezoeken van deze website opnieuw random gegenereerd. <br>
+			Je begint met het testen van de eerste applicatie. De link naar de applicatie en de bijhorende test kun je vinden onder "Test 1".<br>
+			Als je klaar bent met het testen van de eerste applicatie, ga je door met het testen van de tweede. Ook hier zijn de link naar de applicatie en de testen te vinden onder "Test 2".<br>
+			Gelieve de volgorde van de testen te respecteren! <br>
+			Veel succes!
 			</p>
 		</div>
 		<div id="test1"> <h2> Test 1: </h2>
@@ -56,7 +74,7 @@
 		OTli1.append("a").attr("href","http://www.verderstuderen.be/#/").attr("target","_blank").text("verderstuderen.be")
 		var OTli2 = OTUl.append("li")
 		OTli2.append("text").text("Test link: ")
-		OTli2.append("a").attr("href","https://goo.gl/forms/Ji6XSRaulJM5W0Pw2").attr("target","_blank").text("formulier")
+		OTli2.append("a").attr("href","https://goo.gl/forms/5j79uU6MHCiamoNr2").attr("target","_blank").text("formulier")
 		// voeg hier nog de google forms link toe
 
 		var MTUl  = myTool.append("ul")
@@ -67,6 +85,13 @@
 		MTli2.append("text").text("Test link: ")
 		MTli2.append("a").attr("href","https://goo.gl/forms/kp5fQAOLxp5EzXxe2").attr("target","_blank").text("formulier")
 		// voeg hier nog de google forms link toe
+
+		// testId generation
+		testidcontainer = d3.select("#testid");
+
+		testid = Date.now()
+
+		testidcontainer.append("p").text("Je uniek testID is: "+ testid + ". Deze zal je moeten invullen aan het begin van elke test. ")
 
 
 
