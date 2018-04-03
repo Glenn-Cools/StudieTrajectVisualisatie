@@ -20,16 +20,10 @@
 			</p>
 			<h2>Situering:</h2>
 			<p>
-				Het onderzoek kadert in een thesis omtrent een recommendersystem voor het onderwijsaanbod van de KU Leuven te ontwikkelen.<br>
-				In dit onderzoek wordt er gebruik gemaakt van een visualisatie om de verschillende trajecten die studenten in het verleden gedaan hebben voor te stellen. <br>
-				In deze testen zul je twee verschillende visualisaties testen en beoordelen.
-				Het onderzoek zal ongeveer een 60-tal minuten duren. <br>
-				Het onderzoek gebeurt anoniem. Je krijgt hieronder een testID dat je aan het begin van elke test moet invullen. <br> 
-				Op deze manier kan ik de testresultaten van beide testen per ID aan elkaar linken op anonieme wijze. <br>
-				Wens je niet mee te doen, kun je nu de site verlaten. <br>
-				Indien je wel wilt meedoen wordt er verwacht dat je beide testen uitvoert. <br>
-				De instructies omtrent het testen kun je vinden hieronder en in de enquêtes van elke test. Gelieve deze dan ook even kort te lezen. <br>
-				Als je algemene vragen, feedback of opmerkingen hebt, kun je mij altijd contacteren via mail: glenn.cools1@student.kuleuven.be.
+				In dit onderzoek vergelijken we *alternatieve voorstellingen voor studietrajecten* binnen het onderwijsaanbod van KU Leuven. Als testpersoon vragen we je twee verschillende visualisaties te testen en te beoordelen, in minder dan een uur tijd. <br>
+				Het onderzoek gebeurt volledig *anoniem*. Daarom krijg je een willekeurige *testID* toegewezen die telkens je aan het begin van de test moet invullen. Indien je wenst deel te nemen, vragen we je zeker *beide testen* uit te voeren. Indien je liever niet wil deelnemen aan de test, kan je deze pagina gewoon afsluiten. <br>
+				De *testinstructies* vind je in de enquêtes voor elke test. Gelieve deze dan goed te lezen. <br>
+				Als je algemene *vragen*, feedback of opmerkingen hebt, kun je mij altijd contacteren via mail: glenn.cools1@student.kuleuven.be. <br>
 			</p>
 			<h2>TestID: </h2>
 			<div id= "testid"></div>
@@ -69,22 +63,20 @@
 		}
 
 		var OTUl  = onlineTool.append("ul")
-		var OTli1 = OTUl.append("li")
-		OTli1.append("text").text("Applicatie link: ")
-		OTli1.append("a").attr("href","http://www.verderstuderen.be/#/").attr("target","_blank").text("verderstuderen.be")
 		var OTli2 = OTUl.append("li")
 		OTli2.append("text").text("Test link: ")
 		OTli2.append("a").attr("href","https://goo.gl/forms/5j79uU6MHCiamoNr2").attr("target","_blank").text("formulier")
-		// voeg hier nog de google forms link toe
+		var OTli1 = OTUl.append("li")
+		OTli1.append("text").text("Applicatie link: ")
+		OTli1.append("a").attr("href","http://www.verderstuderen.be/#/").attr("target","_blank").text("verderstuderen.be")
 
 		var MTUl  = myTool.append("ul")
-		var MTli1 = MTUl.append("li")
-		MTli1.append("text").text("Applicatie link: ")
-		MTli1.append("a").attr("href","visualisatie.html").attr("target","_blank").text("visualisatie")
 		var MTli2 = MTUl.append("li")
 		MTli2.append("text").text("Test link: ")
 		MTli2.append("a").attr("href","https://goo.gl/forms/kp5fQAOLxp5EzXxe2").attr("target","_blank").text("formulier")
-		// voeg hier nog de google forms link toe
+		var MTli1 = MTUl.append("li")
+		MTli1.append("text").text("Applicatie link: ")
+		MTli1.append("a").attr("href","visualisatie.html").attr("target","_blank").text("visualisatie")
 
 		// testId generation
 		testidcontainer = d3.select("#testid");
