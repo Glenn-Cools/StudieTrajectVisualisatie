@@ -23,6 +23,9 @@ In addition this version uses the following software distrubuted unde the MIT or
 
 function draw() {
 
+	var disclaimer = d3.select("#disclaimer");
+	disclaimer.attr("style","display:none");
+
 	var diplomaName1 = document.getElementById("searchbar-input1").value
 	var diplomaName2 = document.getElementById("searchbar-input2").value
 
