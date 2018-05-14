@@ -19,7 +19,52 @@ In addition this version uses the following software distrubuted unde the MIT or
 //<!--DATA INIT-->
 
 
-//<!--DATA ENTRY-->
+
+//<!--DATA filtering-->
+
+function clear_filter(filtername){
+
+	var filter = document.getElementById(filtername)
+	filter.value = ""
+	draw()
+
+}
+
+function swap_from_to(){
+
+	var fromfilter = document.getElementById("searchbar-input1")
+	var tofilter = document.getElementById("searchbar-input2")
+
+	var from = fromfilter.value;
+	var to = tofilter.value;
+
+	fromfilter.value = to;
+	tofilter.value = from;
+
+	draw();
+
+}
+
+function quick_select_programme(node){
+
+	var fromfilter = document.getElementById("searchbar-input1")
+	var tofilter = document.getElementById("searchbar-input2")
+
+	if(fromfilter.value == node.name && tofilter.value != ""){
+			clear_filter("searchbar-input1")
+	}else if(tofilter.value == node.name && fromfilter.value != ""){
+			clear_filter("searchbar-input2")
+	}else if(fromfilter.value == "" && tofilter.value != node.name ){
+		fromfilter.value = node.name;
+	}else if(tofilter.value == "" && fromfilter.value != node.name){
+		tofilter.value =node.name;
+	}else{
+		return
+	}
+
+	draw()
+
+}
 
 function draw() {
 
@@ -33,27 +78,36 @@ function draw() {
 
 	//filter the trajects according to the given input from the filters
 
+	var start = null;
+	var stop = null;
+
 	if(diplomaName1 != ""){
-		var programme_code1 = dilploma_name_to_code(diplomaName1);
-		filtered_trajects = filter_programme(filtered_trajects,programme_code1)
+		start = dilploma_name_to_code(diplomaName1);
+		filtered_trajects = filter_programme(filtered_trajects,start)
 		if(diplomaName2 != ""){
-			var programme_code2 = dilploma_name_to_code(diplomaName2);
-			filtered_trajects = filter_programme(filtered_trajects,programme_code2)
+			stop = dilploma_name_to_code(diplomaName2);
+			filtered_trajects = filter_programme(filtered_trajects,stop)
 		}
 	}else if(diplomaName2 != ""){
-		var programme_code2 = dilploma_name_to_code(diplomaName2);
-		filtered_trajects = filter_programme(filtered_trajects,programme_code2)
+		stop = dilploma_name_to_code(diplomaName2);
+		filtered_trajects = filter_programme(filtered_trajects,stop)
 	}else{
-		console.log("ERROR!")
+		svg.selectAll("g").remove();
+		return
 	}
 
 	//console.log(filtered_trajects)
 
+	var minimumPercentageOfStudents = document.getElementById("slider").value/10/100;
+
 	// create the graph based on the filtered trajects
-	var graph = create_graph(diplomaList,filtered_trajects);
+	var graph = create_graph(diplomaList,filtered_trajects,start,stop,minimumPercentageOfStudents);
+
+	//console.log(graph)
 
 	// convey the data to the section that draws the visualisation based on the data
 	change(graph)
+	
 }
 
 function draw_legend(colorAxis){
@@ -116,29 +170,77 @@ var color = function(name){
     }
 }
 
+var formatName = function(name){
+	name = name.toLowerCase();
+	if(name.indexOf("bachelor in de ")>-1){
+		name = name.replace("bachelor in de ","");
+	}else if(name.indexOf("bachelor of ")>-1){
+		name = name.replace("bachelor of ","");
+	}else if(name.indexOf("bachelor in het ")>-1){
+		name = name.replace("bachelor in het ","");
+	}else if(name.indexOf("bachelor in ")>-1){
+		name = name.replace("bachelor in ","");
+	}
+
+	if(name.indexOf("master in de ")>-1){
+		name = name.replace("master in de ","");
+	}else if(name.indexOf("master of ")>-1){
+		name = name.replace("master of ","");
+	}else if(name.indexOf("master in het ")>-1){
+		name = name.replace("master in het ","");
+	}else if(name.indexOf("master in ")>-1){
+		name = name.replace("master in ","")
+	}
+
+
+	if(name.indexOf("(bnb)")>-1){
+		name  = name.replace("(bnb)","");
+	}else if(name.indexOf("(mnm)")>-1){
+		name = name.replace("(mnm)","");
+	}
+
+
+	/*if(name.indexOf("bachelor ")>-1){
+		name = name.replace("bachelor ","");
+	}else if(name.indexOf("master ")>-1){
+		name = name.replace("master ","");
+	}*/
+
+	// make the first letter of the string a capital letter.
+	return name.charAt(0).toUpperCase() + name.slice(1);
+
+}
+
 var margin = {
         top: 20,
-        right: 10,
-        bottom: 30,
+        right: 50,
+        bottom: 10,
         left: 40
-    },
-    width = 1400 - margin.left-margin.right
-    height= 1000 - (margin.top) - margin.bottom
+    }
 
 // a way to make the height adaptable to the amount of data with a fixed minimum height
 
-var svg = d3.select("#chart").append("svg")
-								.attr("width", width + margin.left + margin.right)
-								.attr("height", height + margin.top + margin.bottom);
-svg.append("rect")
+var top_svg = d3.select("#chart").append("svg")
+
+top_svg.append("rect")
 	.attr("x",0).attr("y",0)
 	.attr("width","100%")
 	.attr("height","100%")
 	.attr("fill","white");
-svg=svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+svg=top_svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
-function change(d) {
+function change(d){
+
+	var width = 1700 - margin.left-margin.right
+    var height= 830 - margin.top - margin.bottom
+
+    var sankey = d3.sankey().nodeWidth(30)
+								.nodePadding(padding)
+
+	var path = sankey.reversibleLink();
+
+	svg.selectAll("g").remove();
 
 	// if the legend is hidden, show it.
 	if(!showLegend){
@@ -146,132 +248,154 @@ function change(d) {
 		showLegend = true
 	}
 
-	var sankey = d3.sankey().nodeWidth(30)
-						.nodePadding(padding)
-						.size([width, height]);
-
-	var path = sankey.reversibleLink();
-
-	svg.selectAll("g").remove();
-
 	if(d.nodes.length == 0){
 		svg.append("g").append("text").attr("class","warning").text("Er zijn geen trajecten gevonden aan de hand van de gekozen filters.");
 		return;
 	}
 
 	//TODO: try - catch for vis that are to large and return a explanation/suggestion?
+	var successful = false;
+	//var errorThrown = false;
+	while(!successful){
 
-	//compute node and link placements
-	sankey.nodes(d.nodes)
-			.links(d.links)
+		sankey.size([width, height]);	
 
-	sankey.layout(500);
+		//compute node and link placements
+		sankey.nodes(d.nodes)
+				.links(d.links)
+		sankey.layout(500);
 
-	var g = svg.append("g") //link
-		.selectAll(".link")
-		.data(d.links).enter()
-			.append("g")
-			.attr("class", "link")
-			.sort(function(j, i) { return i.dy - j.dy });
+		try{
+			var g = svg.append("g") //link
+				.selectAll(".link")
+				.data(d.links).enter()
+					.append("g")
+					.attr("class", "link")
+					.sort(function(j, i) { return i.dy - j.dy });
 
-	var h = g.append("path") //path0
-		.attr("d", path(0));
-	var f = g.append("path") //path1
-		.attr("d", path(1));
-	var e = g.append("path") //path2
-		.attr("d", path(2));
+			var h = g.append("path") //path0
+				.attr("d", path(0));
+			var f = g.append("path") //path1
+				.attr("d", path(1));
+			var e = g.append("path") //path2
+				.attr("d", path(2));
 
-	g.attr("fill", function(i) {
-		if (i.source.fill) {
-			return i.source.fill;
-		}else{
-			return i.source.color = color(i.source.name);
-		}})
-		.attr("opacity", lowopacity)
-		.on("mouseover", function(d) {
-			d3.select(this).style('opacity', highopacity);
-		})
-		.on("mouseout", function(d) {
-			d3.select(this).style('opacity', lowopacity);
-		})
-		.append("title") //link
-		.text(function(i) {
-			return i.source.name + " → " + i.target.name + "\n" + formatNumber(i.value)
-		});
-
-
-
-	var c = svg.append("g") //node
-		.selectAll(".node")
-		.data(d.nodes).enter()
-			.append("g").attr("class", "node")
-			.attr("transform", function(i) {
-				return "translate(" + i.x + "," + i.y + ")";
-			})
-			.call(d3.behavior.drag().origin(function(i) {
-					return i;
-				})
-				.on("dragstart", function() {
-					this.parentNode.appendChild(this)
-				})
-				.on("drag", b)
-			);
-
-	c.append("rect") //node
-		.attr("height", function(i) {
-			return i.dy;
-			/*if(i.dy>mininimumNodeHeight){
-				return i.dy;
-			}else {
-				return mininimumNodeHeight
-			}*/
-		})
-		.attr("width", sankey.nodeWidth())
-		.style("fill", function(i) {
-			return i.color = color(i.name)
-		})
-		.style("stroke", function(i) {
-			return d3.rgb(i.color).darker(2)
-		})
-		.on("mouseover", function(d) {
-			svg.selectAll(".link").filter(function(l) {
-				return l.source == d || l.target == d;
-			}).transition()
-			.style('opacity', highopacity);
-		})
-		.on("mouseout", function(d) {
-			svg.selectAll(".link").filter(function(l) {
-				return l.source == d || l.target == d;
-			}).transition()
-			.style('opacity', lowopacity);
-		}).on("dblclick", function(d) {  // this doesn't fire
-			console.log("dblclick")
-			svg.selectAll(".link").filter(function(l) {
-				return l.target == d;
-			}).attr("display", function() {
-				if (d3.select(this).attr("display") == "none"){
-					return "inline";
+			g.attr("fill", function(i) {
+				if (i.source.fill) {
+					return i.source.fill;
 				}else{
-				 	return "none";
-				}
-			});
-		})
-		.append("title").text(function(i) {
-			return i.name + "\n" + formatNumber(i.value)
+					return i.source.color = color(i.source.name);
+				}})
+				.attr("opacity", lowopacity)
+				.on("mouseover", function(d) {
+					d3.select(this).style('opacity', highopacity);
+				})
+				.on("mouseout", function(d) {
+					d3.select(this).style('opacity', lowopacity);
+				})
+				.append("title") //link
+				.text(function(i) {
+					return i.source.name + " → " + i.target.name + "\n" + formatNumber(i.value)
+				});
+
+
+
+			var c = svg.append("g") //node
+				.selectAll(".node")
+				.data(d.nodes).enter()
+					.append("g").attr("class", "node")
+					.attr("transform", function(i) {
+						return "translate(" + i.x + "," + i.y + ")";
+					});
+					/*.call(d3.behavior.drag().origin(function(i) {
+							return i;
+						})
+						.on("dragstart", function() {
+							this.parentNode.appendChild(this)
+						})
+						.on("drag", b)
+					);*/
+
+			c.append("rect") //node
+				.attr("height", function(i) {
+					if(i.dy>0){
+						return i.dy;
+					}else{
+						throw new NoRoomException();
+					}
+
+					/*if(i.dy>mininimumNodeHeight){
+						return i.dy;
+					}else {
+						return mininimumNodeHeight
+					}*/
+				})
+				.attr("width", sankey.nodeWidth())
+				.style("fill", function(i) {
+					return i.color = color(i.name)
+				})
+				.style("stroke", function(i) {
+					return d3.rgb(i.color).darker(2)
+				})
+				.on("mouseover", function(d) {
+					svg.selectAll(".link").filter(function(l) {
+						return l.source == d || l.target == d;
+					}).transition()
+					.style('opacity', highopacity);
+				})
+				.on("mouseout", function(d) {
+					svg.selectAll(".link").filter(function(l) {
+						return l.source == d || l.target == d;
+					}).transition()
+					.style('opacity', lowopacity);
+				})
+				.on("click",function(d){quick_select_programme(d)})
+				/*.on("dblclick", function(d) {  // this doesn't fire
+					console.log("dblclick")
+					svg.selectAll(".link").filter(function(l) {
+						return l.target == d;
+					}).attr("display", function() {
+						if (d3.select(this).attr("display") == "none"){
+							return "inline";
+						}else{
+						 	return "none";
+						}
+					});
+				})*/
+				.append("title").text(function(i) {
+					return i.name + "\n" + formatNumber(i.value)
+					
+				});
+			c.append("text") //node
+				.attr("x", -6).attr("y", function(i) {
+					return i.dy / 2
+				})
+				.attr("dy", ".35em").attr("text-anchor", "end").attr("font-size","16px")
+				.text(function(i) {
+					return formatName(i.name);
+				})
+				.filter(function(i) {
+					return i.x < width / 2
+				})
+				.attr("x", 6 + sankey.nodeWidth()).attr("text-anchor", "start")
+
+		top_svg.attr("width", width + margin.left + margin.right)
+				.attr("height", height + margin.top + margin.bottom);
+				successful = true;
+		}catch(err){
+			if(err.name == "NoRoomException"){
+	   			height += 200
+	   			svg.selectAll("g").remove();
+
+				//console.log(d)
+			}else{
+				throw err
+			}
 			
-		});
-	c.append("text") //node
-		.attr("x", -6).attr("y", function(i) {
-			return i.dy / 2
-		})
-		.attr("dy", ".35em").attr("text-anchor", "end").attr("font-size","16px")
-		.text(function(i) {
-			return i.name;
-		})
-		.filter(function(i) {
-			return i.x < width / 2
-		})
-		.attr("x", 6 + sankey.nodeWidth()).attr("text-anchor", "start")
+		}
+	}
+
+
 
 	// shows the value of then node inside the node if the node is 'big' enough
 /*	c.append("text") //node
@@ -307,4 +431,9 @@ function change(d) {
 		h.attr("d", path(0));
 		e.attr("d", path(2))
 	};
+
 };
+
+function NoRoomException() {
+   this.name = 'NoRoomException';
+}

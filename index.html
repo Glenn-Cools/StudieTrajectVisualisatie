@@ -2,8 +2,20 @@
 <html xmlns="https://www.w3.org/1999/xhtml">
 	<head>
 	    <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-	    <title>Home</title>
+	    <title>Studietraject Visualisatie</title>
 	    <style type="text/css">
+	    	@font-face {
+	            font-family: "MyFont";
+	            src: url('Lato-Regular.ttf') format("truetype");
+        	}
+		    html,
+		    body {
+		    	height: 100%;
+		    	font-family: "MyFont", "Open Sans", Segoe UI light, Verdana, Tahoma, Helvetica, sans-serif;
+		    	margin: 0;
+		    	padding: 0;
+		    	background: #fff;
+		    }
 	    	ul {
 	    		list-style-type: none;
 	    	}
@@ -11,38 +23,84 @@
 	    		font-family: Arial, Helvetica, sans-serif
 	    	}
 
+	    	#navagationcontainer {
+	    		position: absolute;
+	    		height: 50px;
+	    		width: 100%;
+	    		top: 0px;
+	    	}
+
+	    	.navigation {
+	    		background-color: #555;
+	    		overflow: hidden;
+	    	}
+	    	.navigation a {
+	    		float: left;
+	    		color: #f2f2f2;
+	    		text-align: center;
+	    		padding: 14px 16px;
+	    		text-decoration: none;
+	    		font-size: 17px;
+	    	}
+	    	.navigation a:hover {
+	    		background-color: #bdbdbd;
+	    		color: black;
+	    	}
+	    	.navigation a.active {
+	    		background-color: #EC9931;
+	    		color: white;
+	    	}
+
+	    	.content {
+	    		margin-top: 80px;
+	    		margin-left: 30px;
+	    		margin-right: 10px;
+	    		margin-bottom: 10px;
+	    	}
+
 
 	    </style>
 	</head>
 	<body>
-		<div>
-			<h1> Welkom beste testgebruiker. </h1>
-			</p>
-			<h2>Situering:</h2>
-			<p>
-				In dit onderzoek vergelijken we <b> alternatieve voorstellingen voor studietrajecten</b> binnen het onderwijsaanbod van KU Leuven. Als testpersoon vragen we je twee verschillende visualisaties te testen en te beoordelen, in minder dan een uur tijd. <br>
-				Het onderzoek gebeurt volledig <b>anoniem</b>. Daarom krijg je een willekeurige <b>testID</b> toegewezen die je telkens aan het begin van de test moet invullen. Indien je wenst deel te nemen, vragen we je zeker <b>beide testen</b> uit te voeren. Indien je liever niet wil deelnemen aan de test, kan je deze pagina gewoon afsluiten. <br>
-				De <b>testinstructies</b> vind je in de enquêtes voor elke test. Gelieve deze dan goed te lezen. <br>
-				Als je algemene <b>vragen</b>, feedback of opmerkingen hebt, kun je mij altijd contacteren via mail: glenn.cools1@student.kuleuven.be. <br>
-			</p>
-			<h2>TestID: </h2>
-			<div id= "testid"></div>
-			<h2> Instructies:</h2>
-			<p>
-			Eenmaal je begint met het testen noteer je best je uniek testID, deze wordt telkens bij het bezoeken van deze website opnieuw random gegenereerd. <br>
-			Je begint met het testen van de eerste visualisatie. De link naar de bijhorende test kun je vinden onder "Test 1". Op de eerste pagina van de het testformulier zul je de link naar de 'te testen' visualisatie vinden.<br>
-			Als je klaar bent met het testen van de eerste visualisatie, ga je door met het testen van de tweede. De link daar de tweede test vind je onder "Test 2". Opnieuw zal de link naar de 'te testen' visualisatie te vinden op de eerste pagina van de test.<br>
-			Gelieve de volgorde van de testen te respecteren! <br>
-			Veel succes!
-			</p>
+
+		<!--Navbar -->
+		<div id="navagationcontainer">
+			<div class="navigation">
+				<a class="active" href="index.html">Start</a>
+				<a href="visualisatie.html">Visualisatie</a>
+				<a href="tutorial.html">Hulp</a>
+			</div>
 		</div>
-		<div id="test1"> <h2> Test 1: </h2>
-			
+		
+		<div class="content">
+			<div>
+				<h1> Welkom beste testgebruiker. </h1>
+				</p>
+				<h2>Situering:</h2>
+				<p>
+					In dit onderzoek vergelijken we <b> alternatieve voorstellingen voor studietrajecten</b> binnen het onderwijsaanbod van KU Leuven. Als testpersoon vragen we je twee verschillende visualisaties te testen en te beoordelen, in minder dan een uur tijd. <br>
+					Het onderzoek gebeurt volledig <b>anoniem</b>. Daarom krijg je een willekeurige <b>testID</b> toegewezen die je telkens aan het begin van de test moet invullen. Indien je wenst deel te nemen, vragen we je zeker <b>beide testen</b> uit te voeren. Indien je liever niet wil deelnemen aan de test, kan je deze pagina gewoon afsluiten. <br>
+					De <b>testinstructies</b> vind je in de enquêtes voor elke test. Gelieve deze dan goed te lezen. <br>
+					Als je algemene <b>vragen</b>, feedback of opmerkingen hebt, kun je mij altijd contacteren via mail: glenn.cools1@student.kuleuven.be. <br>
+				</p>
+				<h2>TestID: </h2>
+				<div id= "testid"></div>
+				<h2> Instructies:</h2>
+				<p>
+				Eenmaal je begint met het testen noteer je best je uniek testID, deze wordt telkens bij het bezoeken van deze website opnieuw random gegenereerd. <br>
+				Je begint met het testen van de eerste visualisatie. De link naar de bijhorende test kun je vinden onder "Test 1". Op de eerste pagina van de het testformulier zul je de link naar de 'te testen' visualisatie vinden.<br>
+				Als je klaar bent met het testen van de eerste visualisatie, ga je door met het testen van de tweede. De link daar de tweede test vind je onder "Test 2". Opnieuw zal de link naar de 'te testen' visualisatie te vinden op de eerste pagina van de test.<br>
+				Gelieve de volgorde van de testen te respecteren! <br>
+				Veel succes!
+				</p>
+			</div>
+			<div id="test1"> <h2> Test 1: </h2>
+				
+			</div>
+			<div id="test2"> <h2> Test 2: </h2>
+				
+			</div>
 		</div>
-		<div id="test2"> <h2> Test 2: </h2>
-			
-		</div>
-		<div id="rng"></div> <!-- test div to check the rng -->
 
 
 

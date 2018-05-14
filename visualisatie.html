@@ -2,7 +2,7 @@
 <html xmlns="https://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
-    <title>Sankey Diagram</title>
+    <title>Studietraject Visualisatie</title>
     <style>
         @font-face {
             font-family: "MyFont";
@@ -16,9 +16,55 @@
             padding: 0;
             background: #fff;
         }
-        #disclaimer {
+
+        #navagationcontainer {
             position: absolute;
-            left: 46%;
+            height: 50px;
+            width: 100%;
+            top: 0px;
+        }
+
+        .navigation {
+            background-color: #555;
+            overflow: hidden;
+        }
+        .navigation a {
+            float: left;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+        .navigation a:hover {
+            background-color: #bdbdbd;
+            color: black;
+        }
+        .navigation a.active {
+            background-color: #EC9931;
+            color: white;
+        }
+
+        .pure-form {
+            border-top: 1px solid #eee;
+            border-bottom:1px solid #eee;
+            background:#fafafa;
+            margin-top: 50px;
+            padding:20px 10px;
+            text-align:center
+        }
+
+        .pure-form .filter{
+            width:100%;
+            max-width:500px;
+            outline:0;
+            text-align:left
+        }
+         #disclaimer {
+            position: absolute;
+            margin-top: 50px;
+            font-size: x-large;
+            left: 44%;
             z-index: 6
         }
         #chart {
@@ -29,17 +75,8 @@
             width: -webkit-calc(80% - 45px);
             width: calc(80% - 45px);
         }
-        .pagetitle {
-            height: 30px;
-            color: #F60;
-            font-size: 20px;
-            line-height: 30px;
-            text-align: center;
-            font-weight: bold;
-            font-style: oblique
-        }
         .node rect {
-            cursor: move;
+            cursor: pointer;
             fill-opacity: .9;
             shape-rendering: crispEdges
         }
@@ -52,6 +89,7 @@
             stroke-opacity: .3;
         }
         .link:hover {
+            cursor: help;
             stroke-opacity: .7;
         }
 
@@ -101,6 +139,45 @@
             border: 1px solid #999;
         }
 
+        /* The slider itself */
+        .slider {
+            -webkit-appearance: none;  /* Override default CSS styles */
+            appearance: none;
+            width: 300px; 
+            height: 15px; 
+            margin-top: 20px;
+            border-radius: 5px;
+            background: #d3d3d3; 
+            outline: none; 
+            opacity: 0.7; /
+            -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+            transition: opacity .2s;
+        }
+
+        /* Mouse-over effects */
+        .slider:hover {
+            opacity: 1; /* Fully shown on mouse-over */
+        }
+
+        /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */ 
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px; 
+            height: 25px; 
+            border-radius: 50%;
+            background: #ff7f0e; 
+            cursor: ew-resize; 
+        }
+
+        .slider::-moz-range-thumb {
+            width: 25px; 
+            height: 25px; 
+            border-radius: 50%;
+            background: #ff7f0e; /* Green background */
+            cursor: ew-resize; 
+        }
+
         .warning {
             text-align: center;
             font-size: 20px;
@@ -133,14 +210,26 @@
 </head>
 <body> <!-- onload="checksize();" -->
 
+    <!--Navbar -->
+    <div id="navagationcontainer">
+        <div class="navigation">
+          <a href="index.html">Start</a>
+          <a class="active"  href="visualisatie.html">Visualisatie</a>
+          <a href="tutorial.html">Hulp</a>
+        </div>
+    </div>
+
     <!--Searchbar-->
 
-    <div id="searchbar">
-        <form onsubmit="return false;" class="pure-form" style="border-top: 1px solid #eee;border-bottom:1px solid #eee;background:#fafafa;margin:30px 0;padding:20px 10px;text-align:center">
-            Van:<br>
-            <input id="searchbar-input1" autofocus type="text" name="q" placeholder="Typ in een opleiding ..." style="width:100%;max-width:500px;outline:0"><br>
-            Naar:<br>
-            <input id="searchbar-input2" autofocus type="text" name="q" placeholder="Typ in een opleiding ..." style="width:100%;max-width:500px;outline:0">
+    <div id="controlepanel">
+        <form onsubmit="return false;" class="pure-form">
+            Van: <input id="searchbar-input1" class="filter" autofocus type="text" name="q" placeholder="Typ in een opleiding ..." style="margin-left:17px">
+            <button type="button" onclick="clear_filter('searchbar-input1')">Verwijder</button><br>
+            <button type="button" onclick="swap_from_to()"> verwissel </button><br>
+            Naar: <input id="searchbar-input2" class="filter" autofocus type="text" name="q" placeholder="Typ in een opleiding ..." style="margin-left:10px">
+            <button type="button" onclick="clear_filter('searchbar-input2')">Verwijder</button><br>
+            <div id= "slideroutput" style="margin-top: 10px"></div> 
+            0% <input type="range" min="0" max="100" value="0" class="slider" id="slider"> 10%
         </form>
     </div>
     <script>
@@ -183,6 +272,18 @@
                     draw()
                 }
             });
+            
+            // Minimum aandeel = (#studenten/totaal #studenten in het traject)
+            // slider controles
+            var slider = document.getElementById("slider");
+            var slideroutput = document.getElementById("slideroutput");
+            slideroutput.innerHTML ="Minimum aandeel van het traject: "+ slider.value/10 +"%"; // Display the default slider value
+
+            // Update the current slider value (each time you drag the slider handle)
+            slider.oninput = function() {
+                slideroutput.innerHTML =  "Minimum aandeel van het traject: "+ slider.value/10 +"%"; 
+                draw();
+            }
 
 
         </script>
@@ -199,10 +300,10 @@
             <div class='legend-title'>Legende:</div>
 
         </div>
-		
-		<div id="disclaimer">
-				Werkt best in chrome.
-		</div>
+
+        <div id="disclaimer">
+                Werkt best in chrome.
+        </div>
 
         <div id="chart" style="z-index:5;"></div>
 

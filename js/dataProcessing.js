@@ -78,33 +78,108 @@ function convertToLink(diplomaList,key,value){
 	return link;
 }
 
-function create_graph(diplomaList,trajectList){
+function create_graph(diplomaList,trajectList,start,stop,minimumPercentageOfStudents=1){
 	var link_map = new Map();
 	var nodes_set =  new Set();
+	var total_number_of_students = 0;
+	trajectList.forEach(function(t){
+		var from;
+		var to;
+		var started = false;
+		var ended = false;
+		for(var j = 1; j < t.traject_length; j++){
+
+			// while from != start skip 
+			// when from == start include until
+			// to == Stop => from == stop
+			
+			from = t["opl"+j];
+			to = t["opl"+(j+1)];
+
+			if(from == start || start == null){ // make sure to only start with the given start programme
+				started = true;
+			}
+			if(from == stop && stop != null){
+				ended = true;
+			}
+			if(started && !ended){
+				//if((from == start && stop == null)||(start == null && to == stop)){
+					total_number_of_students += t.aantal;
+					ended = true; // make sure every traject just gets counted once
+				//}
+			}
+			if(to == stop){
+				ended = true;
+			}
+		}
+	})
+
+	var minimumNumberOfStudents = total_number_of_students*minimumPercentageOfStudents;
+
+	console.log(total_number_of_students)
+	console.log(minimumPercentageOfStudents)
+	console.log(minimumNumberOfStudents)
 
 	for(var i = 0;i < trajectList.length; i++){
 		var traject = trajectList[i];
-		var from;
-		var to;
-		for(var j = 1; j < traject.traject_length; j++){
-			from = traject["opl"+j];
-			to = traject["opl"+(j+1)];
-			var key = from + "," + to;
-			link_map = update_links(link_map,key,traject.aantal)
-			nodes_set.add(find_by_code(diplomaList,from)) 
+		if(traject.aantal>=minimumNumberOfStudents){
+			var from;
+			var to;
+			var started = false;
+			var ended = false;
+			for(var j = 1; j < traject.traject_length; j++){
+
+				// while from != start skip 
+				// when from == start include until
+				// to == Stop => from == stop
+				
+				
+				from = traject["opl"+j];
+				to = traject["opl"+(j+1)];
+
+				if(from == start || start == null){ // make sure to only start with the given start programme
+					started = true;
+				}
+				if(from == stop && stop != null){
+					ended = true;
+				}
+
+				if(started && !ended){
+					var key = from + "," + to;
+					link_map = update_links(link_map,key,traject.aantal)
+					nodes_set.add(find_by_code(diplomaList,from)) 
+				}
+
+				if(to == stop){
+					ended = true;
+				}
+
+				
+			}
+			if(stop == null){
+				nodes_set.add(find_by_code(diplomaList,to))
+			}
 		}
-		nodes_set.add(find_by_code(diplomaList,to)) 
 	}
+
+	if(stop!= null && nodes_set.size>0){
+		nodes_set.add(find_by_code(diplomaList,stop));
+	}
+			
 
 	var nodes = Array.from(nodes_set);
 
+	//console.log(link_map)
+
 	var links = [];
 	link_map.forEach(function(value,key) {
-		var link = convertToLink(diplomaList,key,value);
-		links.push(link)
+			var link = convertToLink(diplomaList,key,value);
+			links.push(link)
 	});
 
 	var graph = {"nodes": nodes, "links": links};
+
+	//console.log(graph)
 
 	graph.links.forEach(function (d, i) {
 		graph.links[i].source = graph.nodes.indexOf(graph.links[i].source);
@@ -114,5 +189,3 @@ function create_graph(diplomaList,trajectList){
 	return JSON.parse(JSON.stringify(graph)) // perform a deep copy to ensure the original data doesn't get altered down the road
 
 }
-
-//console.log(create_graph(diplomaList,traject_list))
