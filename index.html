@@ -58,6 +58,13 @@
 	    		margin-bottom: 10px;
 	    	}
 
+	    	.cite{
+	    		margin-left: 50px;
+	    		width: 80%;
+	    		font-style: italic;
+
+	    	}
+
 
 	    </style>
 	</head>
@@ -74,15 +81,29 @@
 		
 		<div class="content">
 			<div>
-				<h1> Welkom beste testgebruiker. </h1>
+				<h1> Welkom beste gebruiker. </h1>
 				</p>
 				<h2>Situering:</h2>
+				<p> Deze interactieve visualisatie kadert binnen een onderzoek naar een recommender system voor het onderwijsaanbod van de KU Leuven.</p>
+				<!--
 				<p>
 					In dit onderzoek vergelijken we <b> alternatieve voorstellingen voor studietrajecten</b> binnen het onderwijsaanbod van KU Leuven. Als testpersoon vragen we je twee verschillende visualisaties te testen en te beoordelen, in minder dan een uur tijd. <br>
 					Het onderzoek gebeurt volledig <b>anoniem</b>. Daarom krijg je een willekeurige <b>testID</b> toegewezen die je telkens aan het begin van de test moet invullen. Indien je wenst deel te nemen, vragen we je zeker <b>beide testen</b> uit te voeren. Indien je liever niet wil deelnemen aan de test, kan je deze pagina gewoon afsluiten. <br>
 					De <b>testinstructies</b> vind je in de enquêtes voor elke test. Gelieve deze dan goed te lezen. <br>
 					Als je algemene <b>vragen</b>, feedback of opmerkingen hebt, kun je mij altijd contacteren via mail: glenn.cools1@student.kuleuven.be. <br>
 				</p>
+				-->
+				<h2>De data:</h2>
+				<p>
+					De data is afkomstig van <b> verderstuderen.be </b>. Een kopij van de dataset van hun dataset is gemaakt in oktober 2017. Over de data melden zij het volgende: <br>
+
+					<div class="cite"> “De resultaten in deze app zijn een weergave van de trajecten die in het verleden volledig en met succes gevolgd werden bij de instellingen van de Associatie KU Leuven, gebaseerd op gegevens van 2012 tot vandaag. Het is dus geen weergave van alle trajecten die in theorie mogelijk zijn. Sommige voorgestelde trajecten zijn misschien niet langer mogelijk, en nieuwe overstappen zijn mogelijk nog niet volledig doorlopen.” </div>
+				</p>
+
+				<p> 
+					Als je algemene <b>vragen</b>, feedback of opmerkingen hebt, kun je mij altijd contacteren via mail: glenn.cools1@student.kuleuven.be. Eventuele <b>'bugs'</b> mogelijk ook gemeld worden via het eerder vermeld e-mailadres.
+				</p>
+				<!--
 				<h2>TestID: </h2>
 				<div id= "testid"></div>
 				<h2> Instructies:</h2>
@@ -93,13 +114,16 @@
 				Gelieve de volgorde van de testen te respecteren! <br>
 				Veel succes!
 				</p>
+				-->
 			</div>
+			<!--
 			<div id="test1"> <h2> Test 1: </h2>
 				
 			</div>
 			<div id="test2"> <h2> Test 2: </h2>
 				
 			</div>
+		-->
 		</div>
 
 
@@ -107,6 +131,8 @@
 	<script src="js/d3.v3.min.js"></script>
 	<script>
 
+		/*
+		
 		var rngNumber = Math.floor(Math.random() * 2 ) // generates a 0 or a 1 with 50% likelihood of either
 		//d3.select("#rng").append("text").text(rngNumber)
 
@@ -124,17 +150,11 @@
 		var OTli2 = OTUl.append("li")
 		OTli2.append("text").text("Test link: ")
 		OTli2.append("a").attr("href","https://goo.gl/forms/5j79uU6MHCiamoNr2").attr("target","_blank").text("formulier")
-		/*var OTli1 = OTUl.append("li")
-		OTli1.append("text").text("Applicatie link: ")
-		OTli1.append("a").attr("href","http://www.verderstuderen.be/#/").attr("target","_blank").text("verderstuderen.be")*/
 
 		var MTUl  = myTool.append("ul")
 		var MTli2 = MTUl.append("li")
 		MTli2.append("text").text("Test link: ")
 		MTli2.append("a").attr("href","https://goo.gl/forms/kp5fQAOLxp5EzXxe2").attr("target","_blank").text("formulier")
-		/*var MTli1 = MTUl.append("li")
-		MTli1.append("text").text("Applicatie link: ")
-		MTli1.append("a").attr("href","visualisatie.html").attr("target","_blank").text("visualisatie")*/
 
 		// testId generation
 		testidcontainer = d3.select("#testid");
@@ -143,7 +163,7 @@
 
 		testidcontainer.append("p").text("Je uniek testID is: "+ testid + ". Deze zal je moeten invullen aan het begin van elke test. ")
 
-
+		*/
 
 	</script>
 	</body>
